@@ -1,14 +1,16 @@
 import { useEffect } from "react"
 import { getUser } from "../api/user"
 import { useDispatch, useSelector } from "react-redux"
-import { setToken, setUser } from "../redux/slices/userSlice"
+import { setLoading, setToken, setUser } from "../redux/slices/userSlice"
 
 
 const useFetchUser = () => {
+    
     const {token} = useSelector(state=>state.user) 
     const dispatch = useDispatch()
     
     useEffect(()=>{
+        dispatch(setLoading(true))
         const fetchUser = async() =>{
             try{
                 const res = await getUser(token);
@@ -22,6 +24,8 @@ const useFetchUser = () => {
                 
             }catch(error){
                 console.log(error)
+            }finally{
+                dispatch(setLoading(false))
             }
         }
         if(token){
@@ -29,6 +33,7 @@ const useFetchUser = () => {
         }else{
             dispatch(setUser(null))
             dispatch(setToken(null))
+            dispatch(setLoading(false))
         }
     },[])
 }

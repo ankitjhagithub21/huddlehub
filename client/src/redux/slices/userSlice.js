@@ -2,7 +2,8 @@ import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
   token: localStorage.getItem('token') || null,
-  user:null
+  user:null,
+  loading:true
 }
 
 export const userSlice = createSlice({
@@ -22,11 +23,15 @@ export const userSlice = createSlice({
         localStorage.removeItem('token')
         state.user = null
       },
+      setLoading: (state, action) => {
+        state.loading = action.payload
+       
+      },
 
   },
 })
 
 
-export const { setUser,setToken,logout} = userSlice.actions
+export const { setUser,setToken,logout,setLoading} = userSlice.actions
 
 export default userSlice.reducer

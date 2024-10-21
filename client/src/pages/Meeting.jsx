@@ -10,17 +10,23 @@ const Meeting = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isMeetingReady, setIsMeetingReady] = useState(false);
   const [userName, setUserName] = useState("");
-  const { user } = useSelector((state) => state.user);
+  const { user,loading } = useSelector((state) => state.user);
   const { roomName } = useParams();
   const navigate = useNavigate();
   const apiRef = useRef(null); // Store Jitsi API instance
 
+  
   // Set user name when user object changes
   useEffect(() => {
+  
     if (user) {
       setUserName(user.name);
     }
   }, [user]);
+
+  if(loading){
+    return <Loader/>
+  }
 
   // Navigate to home if user is not logged in
   if (!user) {
@@ -29,9 +35,12 @@ const Meeting = () => {
 
 
 
+
   return (
     <>
-      {isLoading && <Loader />}
+    {
+      isLoading && <Loader/>
+    }
 
       <div className="relative w-full h-screen">
         <JitsiMeeting
