@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
 import { login, register } from '../api/user';
+import { setToken, setUser } from '../redux/slices/userSlice';
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true); // State to toggle between login and register
@@ -10,6 +12,7 @@ const Auth = () => {
   const [name, setName] = useState(''); // For registration only
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const dispatch = useDispatch()
 
   // Function to handle form submission
   const handleSubmit = async (e) => {
@@ -23,22 +26,26 @@ const Auth = () => {
 
     setIsLoading(true);
 
+
     try {
       const response = isLogin ? await login(userData) : await register(userData);
 
       if (response.ok) {
         const data = await response.json();
         // Only set the token and show success toast if response is okay
-        localStorage.setItem('token', data.token);
-        toast.success(data.message); // Display success message
-        console.log(data); // Log the user data if needed
-
+       
+        dispatch(setUser(data.user))
+        dispatch(setToken(data.token))
+        
+        toast.success(data.message); 
+        
         // Reset form fields
         setEmail('');
         setPassword('');
         setName('');
 
         navigate("/");
+      
       } else {
         const errorData = await response.json();
         // Display error message if the response is not okay

@@ -3,7 +3,7 @@ import { FaBars, FaTimes } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
-import { setToken, setUser } from '../redux/slices/userSlice';
+import { logout} from '../redux/slices/userSlice';
 
 const Header = () => {
   const {user} = useSelector(state=>state.user)
@@ -12,9 +12,7 @@ const Header = () => {
 
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleLogout = () =>{
-    localStorage.removeItem('token')
-    dispatch(setUser(null))
-    dispatch(setToken(null))
+    dispatch(logout())
     toast.success("Logout successfull.")
   }
 
