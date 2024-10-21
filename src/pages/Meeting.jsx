@@ -34,7 +34,7 @@ const Meeting = () => {
   };
 
   return (
-    <section className="min-h-screen w-full mt-10 flex flex-col items-center justify-center">
+    <section className="min-h-screen w-full flex flex-col items-center justify-center">
       {/* Input Section with RoomForm */}
       
       {!isMeetingReady && (
@@ -68,10 +68,12 @@ const Meeting = () => {
             }}
             interfaceConfigOverwrite={{
               DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
+              autoTranscribeOnRecord:true
             }}
             userInfo={{
               displayName: userName,
             }}
+            
             onApiReady={(externalApi) => {
               console.log('Jitsi External API is ready');
               setIsLoading(false); // Hide loader when meeting loads

@@ -1,9 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const RoomForm = ({ roomName, setRoomName, userName, setUserName, handleJoinRoom }) => {
+  const navigate = useNavigate()
   return (
     <div className="flex flex-col items-center rounded-xl p-8 space-y-6 border w-full">
-      <img src="./logo.png" alt="logo" className='bg-white rounded-lg' width={150}/>
+
+      <img src="./logo.png" onClick={() => navigate("/")} alt="logo" className='bg-white cursor-pointer hover:scale-105 rounded-lg' width={150} />
+
       <h1 className="text-2xl  mt-2">Join a Meeting Room</h1>
       <p className="text-center">
         Enter the **Room Name** and **Your Name** to start or join an existing meeting.
