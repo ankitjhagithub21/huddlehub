@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { getAttendees } from '../api/user';
 import { toast } from 'react-toastify';
@@ -48,6 +48,7 @@ const ScheduleMeeting = () => {
         }
     };
 
+    
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -73,6 +74,9 @@ const ScheduleMeeting = () => {
         }
     };
 
+    if(!user){
+        return <Navigate to={"/login"}/>
+    }
     return (
         <section className='min-h-screen w-full flex items-center justify-center px-5 py-24'>
             <div className="flex flex-col items-center rounded-xl p-6 space-y-6 border w-full max-w-md">
