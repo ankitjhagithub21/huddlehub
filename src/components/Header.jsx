@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa'; // Importing FontAwesome icons
+import { Link } from 'react-router-dom';
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -8,11 +9,11 @@ const Header = () => {
 
   return (
     <header className="fixed top-0 w-full bg-[#1F2937] shadow-xl z-40">
-      <div className="container mx-auto flex items-center justify-between py-2 px-4 md:px-0">
+      <div className="container mx-auto flex items-center justify-between py-2 px-5">
         {/* Logo Section */}
-        <div>
-          <img src="/logo.png" alt="Huddle Hub logo" width={140} />
-        </div>
+        <Link to={"/"} className='bg-white rounded-lg'>
+          <img src="/logo.png" alt="Huddle Hub logo" width={130} />
+        </Link>
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex">
