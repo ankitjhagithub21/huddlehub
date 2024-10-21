@@ -6,9 +6,9 @@ import { getMeeting } from '../api/meeting';
 
 const JoinMeeting = () => {
   const navigate = useNavigate();
-  const { user, token } = useSelector(state => state.user);
+  const { user, token } = useSelector((state) => state.user);
   const [isLoading, setIsLoading] = useState(false);
-  const [roomName, setRoomName] = useState(''); // State for room name
+  const [roomName, setRoomName] = useState(''); 
 
   const handleJoinRoom = async () => {
     if (roomName.trim() === '') {
@@ -26,14 +26,9 @@ const JoinMeeting = () => {
       const res = await getMeeting(roomName, token); // Use roomName here
       if (res.ok) {
         const data = await res.json(); // Extract the data from the response
-        console.log(data); // You can do something with the data if needed
 
-        // Open Jitsi meeting in a new tab (using the room name)
-        const jitsiUrl = `https://meet.jit.si/${roomName}`;
-        window.open(jitsiUrl, '_blank');
-
-        // Optionally navigate somewhere in the app after joining
-        // navigate("/meetings"); 
+        // Pass the attendees data along with roomName to the Meeting component
+        navigate(`/meetings/${data.roomName}`, { state: { attendees: data.attendees } });
       } else {
         const errorData = await res.json();
         toast.error(errorData.message || 'Failed to join meeting.');
@@ -48,7 +43,6 @@ const JoinMeeting = () => {
   return (
     <section className='min-h-screen w-full flex items-center justify-center px-5'>
       <div className="flex flex-col items-center rounded-xl p-8 space-y-6 border w-full max-w-md">
-
         <img src="./logo.png" onClick={() => navigate("/")} alt="logo" className='bg-white cursor-pointer hover:scale-105 rounded-lg' width={150} />
 
         <h1 className="text-2xl mt-2">Join a Meeting Room</h1>

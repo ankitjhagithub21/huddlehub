@@ -13,6 +13,7 @@ import useFetchUser from "./hooks/useFetchUser";
 import Features from "./components/Features";
 import Pricing from "./components/Pricing";
 import Contact from "./components/Contact";
+import Meeting from "./pages/Meeting";
 
 const App = () => {
   useFetchUser()
@@ -28,6 +29,7 @@ const App = () => {
         <Route path="/auth" element={<Auth />} />
         <Route path="/join-meeting" element={<JoinMeeting />} />
         <Route path="/schedule-meeting" element={<ScheduleMeeting />} />
+        <Route path="/meetings/:roomName" element={<Meeting />} />
 
       </Routes>
       <Footer />
