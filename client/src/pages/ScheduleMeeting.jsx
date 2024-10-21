@@ -13,11 +13,15 @@ const ScheduleMeeting = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [selectedAttendees, setSelectedAttendees] = useState([]);
     const [meetingLink, setMeetingLink] = useState('');
-    const navigate = useNavigate(); // useNavigate hook for navigation
+    const navigate = useNavigate(); 
 
     const handleSchedule = async () => {
         if (roomName.trim() === '' || meetingTime === '') {
             toast.error('Please fill all the fields.');
+            return;
+        }
+        if (new Date(meetingTime) < new Date()) {
+            toast.error('Meeting time cannot be in the past.');
             return;
         }
         if (!user) {
@@ -28,21 +32,20 @@ const ScheduleMeeting = () => {
         const meetingData = {
             roomName,
             meetingTime,
-            createdAt: meetingTime,
+            createdAt: new Date().toISOString(), // Store current time as creation time
             attendees: selectedAttendees
         };
 
         try {
             setIsLoading(true);
             const res = await createMeeting(meetingData, token);
-            const data = await res.json()
+            const data = await res.json();
             if (res.ok) {
                 toast.success('Meeting scheduled successfully!');
-                setRoomName('')
-                setMeetingTime('')
-                setSelectedAttendees([])
+                setRoomName('');
+                setMeetingTime('');
+                setSelectedAttendees([]);
                 setMeetingLink(`https://huddle-hub.vercel.app/meetings/${data.meeting.roomName}`);
-                
             } else {
                 const errorData = await res.json();
                 toast.error(errorData.message || 'Failed to schedule meeting.');
@@ -56,8 +59,11 @@ const ScheduleMeeting = () => {
 
     useEffect(() => {
         const fetchUsers = async () => {
+            if (!token) return; // Early return if no token
+
             try {
                 const res = await getAttendees(token);
+                if (!res.ok) throw new Error('Failed to fetch attendees');
                 const data = await res.json();
                 setAttendees(data);
             } catch (error) {
@@ -65,24 +71,21 @@ const ScheduleMeeting = () => {
                 toast.error('Failed to fetch attendees.');
             }
         };
-        if (token) {
-            fetchUsers();
-        }
+        fetchUsers();
     }, [token]);
 
     const handleAttendeeChange = (e) => {
         const { value, checked } = e.target;
-        if (checked) {
-            setSelectedAttendees((prev) => [...prev, value]);
-        } else {
-            setSelectedAttendees((prev) => prev.filter((attendeeId) => attendeeId !== value));
-        }
+        setSelectedAttendees((prev) =>
+            checked ? [...prev, value] : prev.filter((attendeeId) => attendeeId !== value)
+        );
     };
 
     const copyMeetingLink = () => {
         navigator.clipboard.writeText(meetingLink)
             .then(() => {
                 toast.success('Meeting link copied to clipboard!');
+                setMeetingLink('');
             })
             .catch((err) => {
                 toast.error('Failed to copy meeting link.');
@@ -170,4 +173,4 @@ const ScheduleMeeting = () => {
     );
 };
 
-export default ScheduleMeeting;
+export default ScheduleMeeting;  
