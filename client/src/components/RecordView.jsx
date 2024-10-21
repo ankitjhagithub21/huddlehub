@@ -1,26 +1,15 @@
-
 import { useEffect, useRef } from "react";
 import { ReactMediaRecorder } from "react-media-recorder";
 
 const RecordView = ({ onStopRecording }) => {
   const startRecordingRef = useRef(null); // Store the startRecording function
   const stopRecordingRef = useRef(null); // Store the stopRecording function
-
-  const downloadRecording = (mediaBlobUrl) => {
-    const a = document.createElement("a");
-    a.href = mediaBlobUrl;
-    a.download = "recording.mp4"; // File name for the downloaded video
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
+  const mediaBlobUrlRef = useRef(null); // Store the mediaBlobUrl
 
   useEffect(() => {
-    if (startRecordingRef.current) {
-      startRecordingRef.current(); // Start recording on component mount
-    }
     return () => {
-      if (stopRecordingRef.current) stopRecordingRef.current(); // Stop recording on unmount
+      // Cleanup function to stop recording if necessary
+      if (stopRecordingRef.current) stopRecordingRef.current();
     };
   }, []);
 
@@ -32,12 +21,13 @@ const RecordView = ({ onStopRecording }) => {
           startRecordingRef.current = startRecording;
           stopRecordingRef.current = stopRecording;
 
-          if (mediaBlobUrl) {
-            downloadRecording(mediaBlobUrl); // Download recording when available
-            onStopRecording(); // Navigate to home page
+          // Check if a new mediaBlobUrl is available
+          if (mediaBlobUrl && mediaBlobUrl !== mediaBlobUrlRef.current) {
+            mediaBlobUrlRef.current = mediaBlobUrl; // Store the latest mediaBlobUrl
+            onStopRecording(mediaBlobUrl); // Call the stop recording handler with the URL
           }
 
-          return <></>;
+          return <></>; // You can add UI elements here for user feedback if needed
         }}
       />
     </div>

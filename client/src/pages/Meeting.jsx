@@ -1,4 +1,3 @@
-// Meeting.js
 import { JitsiMeeting } from "@jitsi/react-sdk";
 import { useState, useEffect, useRef } from "react";
 import Loader from "../components/Loader";
@@ -15,6 +14,7 @@ const Meeting = () => {
   const { roomName } = useParams();
   const navigate = useNavigate();
   const apiRef = useRef(null); // Store Jitsi API instance
+  const [mediaBlobUrl, setMediaBlobUrl] = useState(null); // Store the media blob URL
 
   // Set user name when user object changes
   useEffect(() => {
@@ -28,15 +28,27 @@ const Meeting = () => {
     return <Navigate to="/" />;
   }
 
-  // Stop recording and navigate to home
-  const handleStopRecording = () => {
-    navigate("/"); // Navigate to home page after recording ends
+  // Handle stopping the recording and navigating to home
+  const handleStopRecording = (blobUrl) => {
+    setMediaBlobUrl(blobUrl); // Store the media blob URL for downloading later
+  };
+
+  const downloadRecording = (blobUrl) => {
+    const a = document.createElement("a");
+    a.href = blobUrl;
+    a.download = "recording.mp4"; // File name for the downloaded video
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
   };
 
   // End meeting and navigate to home
   const handleEndMeeting = () => {
     if (apiRef.current) {
       apiRef.current.executeCommand("hangup"); // End the meeting
+      if (mediaBlobUrl) {
+        downloadRecording(mediaBlobUrl); // Download recording if available
+      }
       navigate("/"); // Ensure user navigates to home
     }
   };
@@ -70,7 +82,7 @@ const Meeting = () => {
             // Add listener for 'readyToClose' event
             api.addEventListener("readyToClose", () => {
               if (isMeetingReady) {
-                handleStopRecording(); // Stop recording and navigate to home
+                handleEndMeeting(); // Ensure user navigates to home
               }
             });
           }}

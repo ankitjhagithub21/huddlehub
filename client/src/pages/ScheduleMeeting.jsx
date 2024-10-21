@@ -33,7 +33,7 @@ const ScheduleMeeting = () => {
 
         try {
             setIsLoading(true);
-            const res = await createMeeting(meetingData,token);
+            const res = await createMeeting(meetingData, token);
             if (res.ok) {
                 toast.success('Meeting scheduled successfully!');
                 navigate('/'); // Navigate to home or meetings page after scheduling
@@ -105,21 +105,28 @@ const ScheduleMeeting = () => {
                 />
 
                 {/* Select attendees with checkboxes */}
-                <div className="w-72 border border-gray-300 rounded-lg p-2 max-h-32 overflow-y-auto">
-                    {attendees.map((attendee) => (
-                        <div key={attendee._id} className="flex items-center">
-                            <input
-                                type="checkbox"
-                                id={attendee._id}
-                                value={attendee._id}
-                                checked={selectedAttendees.includes(attendee._id)}
-                                onChange={handleAttendeeChange}
-                                className="mr-2"
-                            />
-                            <label htmlFor={attendee._id}>{attendee.name}</label>
+                {
+                    attendees.length > 0 &&
+                    <>
+                        <h2>Select attendees</h2>
+                        <div className="w-72 border border-gray-300 rounded-lg p-2 max-h-32 overflow-y-auto">
+
+                            {attendees.map((attendee) => (
+                                <div key={attendee._id} className="flex items-center">
+                                    <input
+                                        type="checkbox"
+                                        id={attendee._id}
+                                        value={attendee._id}
+                                        checked={selectedAttendees.includes(attendee._id)}
+                                        onChange={handleAttendeeChange}
+                                        className="mr-2"
+                                    />
+                                    <label htmlFor={attendee._id}>{attendee.name}</label>
+                                </div>
+                            ))}
                         </div>
-                    ))}
-                </div>
+                    </>
+                }
 
                 {/* Button to schedule the meeting */}
                 <button

@@ -109,7 +109,8 @@ const getUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     // Assuming the user is authenticated and their ID is stored in req.user.id from the JWT middleware
-    const users = User.find({ _id: { $ne: req.user._id } }).select("name"); // Exclude password
+    const users = await User.find().select("name"); // Exclude password
+
     if (!users) {
       return res.status(404).json({ message: 'User not found' });
     }
