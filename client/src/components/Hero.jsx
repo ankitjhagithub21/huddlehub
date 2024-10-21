@@ -13,11 +13,11 @@ const Hero = () => {
         Join your team from anywhere, at any time, with high-quality streaming.
       </p>
       <div className="flex gap-4 md:flex-row flex-col">
-        <button onClick={()=>navigate("/meeting")} className="bg-orange-500 px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition">
-          Start meeting
+        <button onClick={()=>navigate("/join-meeting")} className="bg-orange-500 px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition">
+          Join meeting
         </button>
-        <button className="border border-orange-500 px-6 py-3 rounded-full hover:bg-orange-500 hover:text-white transition">
-          Learn More
+        <button onClick={()=>navigate("/schedule-meeting")} className="border border-orange-500 px-6 py-3 rounded-full hover:bg-orange-500 hover:text-white transition">
+          Schedule meeting
         </button>
       </div>
     </div>
