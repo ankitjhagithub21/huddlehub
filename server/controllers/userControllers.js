@@ -1,6 +1,7 @@
 const User = require('../models/User'); 
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const validator = require('validator');
 
 const JWT_SECRET = process.env.JWT_SECRET
 
@@ -13,13 +14,25 @@ const registerUser = async (req, res) => {
     let user = await User.findOne({ email });
     if (user) {
       return res.status(400).json({ message: 'User already exists' });
+
     }
+
+    if(!validator.isEmail(email)){
+      return res.status(400).json({ message: 'Please enter valid email address.' });
+    }
+
+    if(password.length<6){
+      return res.status(400).json({ message: 'Password length must be atleast 6 characters.' });
+    }
+
+
+    const hashedPassword = await bcrypt.hash(password,10)
 
     // Create new user
     user = new User({
       name,
       email,
-      password,
+      password:hashedPassword,
     });
 
     // Save user to the database
@@ -90,8 +103,24 @@ const getUser = async (req, res) => {
   }
 };
 
+
+const getAllUsers = async (req, res) => {
+  try {
+    // Assuming the user is authenticated and their ID is stored in req.user.id from the JWT middleware
+    const users = await User.find().select('-password'); // Exclude password
+    if (!users) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    res.json(users);
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
 module.exports = {
   registerUser,
   loginUser,
   getUser,
+  getAllUsers
 };

@@ -18,7 +18,7 @@ const App = () => {
   useFetchUser()
   return (
     <BrowserRouter>
-      <ToastContainer />
+      <ToastContainer position="top-center" autoClose={1500} hideProgressBar={true}/>
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />
