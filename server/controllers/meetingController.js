@@ -35,15 +35,27 @@ const getUserMeetings = async (req, res) => {
 const getMeetingByRoomName = async (req, res) => {
   try {
     const { roomName } = req.params;
-    const meeting = await Meeting.findOne({ roomName }).populate('attendees', 'firstName');
+    const userId = req.user._id; 
+
+    const meeting = await Meeting.findOne({ roomName }).populate('attendees', 'name'); 
     if (!meeting) {
       return res.status(404).json({ message: 'Meeting not found' });
     }
+
+    // Check if the user is an attendee or the creator
+    const isAttendee = meeting.attendees.some(attendee => attendee._id.toString() === userId.toString());
+    const isCreator = meeting.createdBy.toString() === userId.toString();
+
+    if (!isAttendee && !isCreator) {
+      return res.status(403).json({ message: 'Access denied: You are not allowed to join this meeting' });
+    }
+
     res.status(200).json(meeting);
   } catch (error) {
     res.status(500).json({ message: 'Error fetching meeting', error: error.message });
   }
 };
+
 
 // Export the controller functions
 module.exports = {

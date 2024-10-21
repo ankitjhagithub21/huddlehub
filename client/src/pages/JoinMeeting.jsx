@@ -2,33 +2,47 @@ import { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { getMeeting } from '../api/meeting';
 
 const JoinMeeting = () => {
   const navigate = useNavigate();
-  const {user} = useSelector(state=>state.user)
-  
+  const { user, token } = useSelector(state => state.user);
+  const [isLoading, setIsLoading] = useState(false);
   const [roomName, setRoomName] = useState(''); // State for room name
 
-  const handleJoinRoom = () => {
-
+  const handleJoinRoom = async () => {
     if (roomName.trim() === '') {
       toast.error('Please enter a valid room name.');
       return;
     }
 
-    if(!user){
-      toast.error('Please login.');
+    if (!user) {
+      toast.error('Please login to join a meeting.');
       return;
     }
-    // Open Jitsi meeting in a new tab (using the room name)
-    const jitsiUrl = `https://meet.jit.si/${roomName}`;
-    window.open(jitsiUrl, '_blank');
 
-    // Send the userId and meeting name to the server (Future work)
-    // Fetch the user details using the stored userId (server-side logic)
-    // Example: save meeting details to the database via API request
+    try {
+      setIsLoading(true);
+      const res = await getMeeting(roomName, token); // Use roomName here
+      if (res.ok) {
+        const data = await res.json(); // Extract the data from the response
+        console.log(data); // You can do something with the data if needed
 
-    // navigate("/meetings"); // Optionally navigate somewhere in the app
+        // Open Jitsi meeting in a new tab (using the room name)
+        const jitsiUrl = `https://meet.jit.si/${roomName}`;
+        window.open(jitsiUrl, '_blank');
+
+        // Optionally navigate somewhere in the app after joining
+        // navigate("/meetings"); 
+      } else {
+        const errorData = await res.json();
+        toast.error(errorData.message || 'Failed to join meeting.');
+      }
+    } catch (error) {
+      toast.error(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -52,9 +66,10 @@ const JoinMeeting = () => {
 
         <button
           onClick={handleJoinRoom}
-          className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow-md transition duration-300"
+          disabled={isLoading} // Disable the button while loading
+          className={`bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg shadow-md transition duration-300 ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
         >
-          Join Room
+          {isLoading ? 'Joining...' : 'Join Room'}
         </button>
       </div>
     </section>

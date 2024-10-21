@@ -13,4 +13,13 @@ export const createMeeting = async(data,token) =>{
     return res;
 }
 
+export const getMeeting = async(roomName,token) =>{
+    const res = await fetch(`${baseUrl}/${roomName}`,{
+        headers:{
+            "Authorization":`Bearer ${token}`
+        }
+    })
+    return res;
+}
+
 
