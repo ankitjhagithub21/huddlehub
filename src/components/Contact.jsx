@@ -20,7 +20,7 @@ const Contact = () => {
                 
                 {/* Contact Form */}
                 <div>
-                    <h2 className="text-4xl font-bold mb-6">Get in Touch</h2>
+                    <h2 className="text-4xl font-semibold mb-6">Get in Touch</h2>
                     <p className="text-gray-400 mb-8">
                         Have any questions? Feel free to reach out. We’ll get back to you as soon as possible!
                     </p>

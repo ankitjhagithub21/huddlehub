@@ -6,7 +6,7 @@ const Pricing = () => {
     <div>
        <section className="bg-gray-900 text-white py-16 px-6" id='pricing'>
       <div className="max-w-6xl mx-auto text-center">
-        <h2 className="text-4xl font-bold mb-8">Choose Your Plan</h2>
+        <h2 className="text-4xl font-semibold mb-8">Choose Your Plan</h2>
         <p className="text-lg text-gray-400 mb-16">
           Find the right plan for your needs. Simple and transparent pricing.
         </p>
