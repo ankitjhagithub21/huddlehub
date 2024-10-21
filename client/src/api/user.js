@@ -34,3 +34,12 @@ export const register = async(data) =>{
     return res;
 }
 
+
+export const getAttendees = async(token) =>{
+    const res = await fetch(`${baseUrl}`,{
+        headers:{
+            "Authorization":`Bearer ${token}`
+        }
+    })
+    return res;
+}

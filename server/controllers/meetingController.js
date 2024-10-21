@@ -3,13 +3,14 @@ const Meeting = require('../models/Meeting'); // Import the Meeting model
 // Create a new meeting
 const createMeeting = async (req, res) => {
   try {
-    const { roomName, attendees } = req.body; // Extract data from request body
-    const createdBy = req.user._id; // Assuming user ID is set in req.user after authentication
+    const { roomName, attendees,createdAt } = req.body; 
+    const createdBy = req.user._id; 
 
     const newMeeting = new Meeting({
       roomName,
       attendees,
       createdBy,
+      createdAt
     });
 
     await newMeeting.save(); 
