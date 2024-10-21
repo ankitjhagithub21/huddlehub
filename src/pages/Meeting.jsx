@@ -1,5 +1,5 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
-import { useState, useRef } from 'react';
+import { useState} from 'react';
 import Loader from '../components/Loader';
 import RoomForm from '../components/RoomForm'; // Import RoomForm component
 
@@ -9,7 +9,7 @@ const Meeting = () => {
   const [isMeetingReady, setIsMeetingReady] = useState(false); // Toggle meeting visibility
   const [isLoading, setIsLoading] = useState(false); // Track loading state
   const [userName, setUserName] = useState(''); // User name input state
-  const externalApiRef = useRef(null); // Ref for Jitsi API instance
+  
 
   const handleJoinRoom = () => {
     if (roomName.trim() === '') {
@@ -24,21 +24,15 @@ const Meeting = () => {
     setIsLoading(true); // Show loader before meeting loads
   };
 
-  const handleExitRoom = () => {
-    if (externalApiRef.current) {
-      externalApiRef.current.executeCommand('hangup'); // Hangup the meeting
-    }
-    setIsMeetingReady(false); // Reset to show input fields
-    setRoomName(''); // Clear room name input
-    setUserName(''); // Clear user name input
-  };
+ 
 
   return (
-    <section className="min-h-screen w-full flex flex-col items-center justify-center">
+    <>
+  
       {/* Input Section with RoomForm */}
       
       {!isMeetingReady && (
-        <div className='max-w-lg p-5 mx-auto'>
+       
           <RoomForm
           roomName={roomName}
           setRoomName={setRoomName}
@@ -46,7 +40,7 @@ const Meeting = () => {
           setUserName={setUserName}
           handleJoinRoom={handleJoinRoom}
         />
-        </div>
+      
       )}
 
       
@@ -68,17 +62,15 @@ const Meeting = () => {
             }}
             interfaceConfigOverwrite={{
               DISABLE_JOIN_LEAVE_NOTIFICATIONS: true,
-              autoTranscribeOnRecord:true
             }}
             userInfo={{
               displayName: userName,
             }}
-            
             onApiReady={(externalApi) => {
               console.log('Jitsi External API is ready');
-              setIsLoading(false); // Hide loader when meeting loads
-              externalApiRef.current = externalApi; // Store API instance
-              externalApi.addEventListener('readyToClose', handleExitRoom); // Listen for meeting close
+              setIsLoading(false); 
+             
+              
             }}
             getIFrameRef={(iframeRef) => {
               iframeRef.style.height = '100vh'; // Full height iframe
@@ -89,7 +81,7 @@ const Meeting = () => {
          
         </div>
       )}
-    </section>
+    </>
   );
 };
 
