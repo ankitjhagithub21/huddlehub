@@ -12,6 +12,7 @@ const ScheduleMeeting = () => {
     const [attendees, setAttendees] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [selectedAttendees, setSelectedAttendees] = useState([]);
+    const [meetingLink, setMeetingLink] = useState('');
     const navigate = useNavigate(); // useNavigate hook for navigation
 
     const handleSchedule = async () => {
@@ -34,9 +35,14 @@ const ScheduleMeeting = () => {
         try {
             setIsLoading(true);
             const res = await createMeeting(meetingData, token);
+            const data = await res.json()
             if (res.ok) {
                 toast.success('Meeting scheduled successfully!');
-                navigate('/'); // Navigate to home or meetings page after scheduling
+                setRoomName('')
+                setMeetingTime('')
+                setSelectedAttendees([])
+                setMeetingLink(`https://huddle-hub.vercel.app/meetings/${data.meeting.roomName}`);
+                
             } else {
                 const errorData = await res.json();
                 toast.error(errorData.message || 'Failed to schedule meeting.');
@@ -48,7 +54,6 @@ const ScheduleMeeting = () => {
         }
     };
 
-    
     useEffect(() => {
         const fetchUsers = async () => {
             try {
@@ -74,9 +79,21 @@ const ScheduleMeeting = () => {
         }
     };
 
-    if(!user){
-        return <Navigate to={"/login"}/>
+    const copyMeetingLink = () => {
+        navigator.clipboard.writeText(meetingLink)
+            .then(() => {
+                toast.success('Meeting link copied to clipboard!');
+            })
+            .catch((err) => {
+                toast.error('Failed to copy meeting link.');
+                console.error('Error copying text: ', err);
+            });
+    };
+
+    if (!user) {
+        return <Navigate to={"/login"} />
     }
+
     return (
         <section className='min-h-screen w-full flex items-center justify-center px-5 py-24'>
             <div className="flex flex-col items-center rounded-xl p-6 space-y-6 border w-full max-w-md">
@@ -109,12 +126,10 @@ const ScheduleMeeting = () => {
                 />
 
                 {/* Select attendees with checkboxes */}
-                {
-                    attendees.length > 0 &&
+                {attendees.length > 0 && (
                     <>
                         <h2>Select attendees</h2>
                         <div className="w-72 border border-gray-300 rounded-lg p-2 max-h-32 overflow-y-auto">
-
                             {attendees.map((attendee) => (
                                 <div key={attendee._id} className="flex items-center">
                                     <input
@@ -130,7 +145,7 @@ const ScheduleMeeting = () => {
                             ))}
                         </div>
                     </>
-                }
+                )}
 
                 {/* Button to schedule the meeting */}
                 <button
@@ -140,6 +155,16 @@ const ScheduleMeeting = () => {
                 >
                     {isLoading ? 'Scheduling...' : 'Schedule Meeting'}
                 </button>
+
+                {/* Button to copy meeting link */}
+                {meetingLink && (
+                    <button 
+                        onClick={copyMeetingLink} 
+                        className='bg-green-500 text-white rounded-lg px-4 py-2'
+                    >
+                        Copy meeting link
+                    </button>
+                )}
             </div>
         </section>
     );

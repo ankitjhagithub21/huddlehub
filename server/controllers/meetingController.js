@@ -6,6 +6,12 @@ const createMeeting = async (req, res) => {
     const { roomName, attendees,createdAt } = req.body; 
     const createdBy = req.user._id; 
 
+    const meeting = await Meeting.findOne({roomName})
+
+    if(meeting){
+      return res.status(400).json({ message: 'Meeting already created.'});
+    }
+
     const newMeeting = new Meeting({
       roomName,
       attendees,
