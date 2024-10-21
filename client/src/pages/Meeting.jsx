@@ -1,27 +1,27 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
 import { useState, useEffect } from 'react';
 import Loader from '../components/Loader';
-import { useLocation } from 'react-router-dom';
-
+import { Navigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 
 const Meeting = () => {
   const YOUR_DOMAIN = 'meet.jit.si'; 
-  const location = useLocation();
-  const { attendees } = location.state || {}; // Get attendees data from the location state
-  const [roomName, setRoomName] = useState(location.pathname.split('/').pop()); // Extract room name from URL
-  const [isMeetingReady, setIsMeetingReady] = useState(false); // Toggle meeting visibility
+
   const [isLoading, setIsLoading] = useState(true); // Track loading state
+  const [isMeetingReady, setIsMeetingReady] = useState(false); // Meeting ready state
   const [userName, setUserName] = useState(''); // User name input state
+  const { user } = useSelector(state => state.user);
+  const {roomName} = useParams()
 
   useEffect(() => {
-    // Set user name from attendees or prompt for a name
-    if (attendees && attendees.length > 0) {
-      setUserName(attendees[0].name); // Example: Set the first attendee's name
-    } else {
-      // Optionally prompt for a name if there are no attendees
-      setUserName(prompt('Please enter your name:') || 'Guest');
+    if (user) {
+      setUserName(user.name);
     }
-  }, [attendees]);
+  }, [user]);
+
+  if (!user) {
+    return <Navigate to="/" />;
+  }
 
   return (
     <>
@@ -48,9 +48,8 @@ const Meeting = () => {
               displayName: userName,
             }}
             onApiReady={(api) => {
-            
               setIsLoading(false); // Hide loader when meeting loads
-           
+              setIsMeetingReady(true); // Set meeting as ready
             }}
             getIFrameRef={(iframeRef) => {
               iframeRef.style.height = '100vh'; // Full height iframe
