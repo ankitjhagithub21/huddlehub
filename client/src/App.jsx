@@ -14,6 +14,7 @@ import Features from "./components/Features";
 import Pricing from "./components/Pricing";
 import Contact from "./components/Contact";
 import Meeting from "./pages/Meeting";
+import PageNotFound from "./pages/PageNotFound";
 
 const App = () => {
   useFetchUser()
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/join-meeting" element={<JoinMeeting />} />
         <Route path="/schedule-meeting" element={<ScheduleMeeting />} />
         <Route path="/meetings/:roomName" element={<Meeting />} />
+        <Route path="/*" element={<PageNotFound />} />
 
       </Routes>
       <Footer />

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaBars, FaTimes } from 'react-icons/fa'; 
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { logout} from '../redux/slices/userSlice';
@@ -9,12 +9,17 @@ const Header = () => {
   const {user} = useSelector(state=>state.user)
   const dispatch = useDispatch()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+ const location = useLocation()
   const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
   const handleLogout = () =>{
     dispatch(logout())
     toast.success("Logout successfull.")
   }
+
+  if(location.pathname.includes("/meetings")){
+    return null
+  }
+  
 
   return (
     <header className="fixed top-0 w-full bg-[#1F2937] shadow-xl z-40">
@@ -83,7 +88,7 @@ const Header = () => {
             </li>
             <li>
             {
-               user ?  <button onClick={handleLogout} className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg">Logout</button> :  <Link  to="/auth" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg">Login</Link>
+               user ?  <button onClick={handleLogout} className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg">Logout</button> :  <Link  to="/auth" className="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg" onClick={toggleMenu}>Login</Link>
             }
             </li>
           </ul>
