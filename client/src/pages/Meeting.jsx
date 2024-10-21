@@ -16,23 +16,28 @@ const Meeting = () => {
   const navigate = useNavigate();
   const apiRef = useRef(null); // Store Jitsi API instance
 
+  // Set user name when user object changes
   useEffect(() => {
     if (user) {
       setUserName(user.name);
     }
   }, [user]);
 
+  // Navigate to home if user is not logged in
   if (!user) {
     return <Navigate to="/" />;
   }
 
+  // Stop recording and navigate to home
   const handleStopRecording = () => {
     navigate("/"); // Navigate to home page after recording ends
   };
 
+  // End meeting and navigate to home
   const handleEndMeeting = () => {
     if (apiRef.current) {
       apiRef.current.executeCommand("hangup"); // End the meeting
+      navigate("/"); // Ensure user navigates to home
     }
   };
 
@@ -58,13 +63,14 @@ const Meeting = () => {
             displayName: userName,
           }}
           onApiReady={(api) => {
-            apiRef.current = api; // Store API instance
+            apiRef.current = api; // Store API instance in ref
             setIsLoading(false);
             setIsMeetingReady(true);
 
+            // Add listener for 'readyToClose' event
             api.addEventListener("readyToClose", () => {
               if (isMeetingReady) {
-                handleStopRecording(); // End recording and navigate
+                handleStopRecording(); // Stop recording and navigate to home
               }
             });
           }}
@@ -83,7 +89,7 @@ const Meeting = () => {
           <div className="absolute top-4 left-4 z-50">
             <button
               onClick={handleEndMeeting}
-              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+              className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
             >
               End Meeting
             </button>
