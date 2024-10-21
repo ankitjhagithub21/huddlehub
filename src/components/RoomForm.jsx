@@ -2,7 +2,7 @@ import React from 'react';
 
 const RoomForm = ({ roomName, setRoomName, userName, setUserName, handleJoinRoom }) => {
   return (
-    <div className="flex flex-col items-center rounded-xl p-8 space-y-6 border">
+    <div className="flex flex-col items-center rounded-xl p-8 space-y-6 border w-full">
       <img src="./logo.png" alt="logo" className='bg-white rounded-lg' width={150}/>
       <h1 className="text-2xl  mt-2">Join a Meeting Room</h1>
       <p className="text-center">

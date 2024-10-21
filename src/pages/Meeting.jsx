@@ -36,16 +36,20 @@ const Meeting = () => {
   return (
     <section className="min-h-screen w-full mt-10 flex flex-col items-center justify-center">
       {/* Input Section with RoomForm */}
+      
       {!isMeetingReady && (
-        <RoomForm
+        <div className='max-w-lg p-5 mx-auto'>
+          <RoomForm
           roomName={roomName}
           setRoomName={setRoomName}
           userName={userName}
           setUserName={setUserName}
           handleJoinRoom={handleJoinRoom}
         />
+        </div>
       )}
 
+      
       {/* Loader */}
       {isLoading && <Loader />}
 
