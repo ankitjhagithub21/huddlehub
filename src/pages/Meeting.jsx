@@ -1,13 +1,17 @@
 import { JitsiMeeting } from '@jitsi/react-sdk';
+import { useState } from 'react';
+import Loader from '../components/Loader';
 
 
-const Jitsi = () => {
+const Meeting = () => {
     const [isLoading, setIsLoading] = useState(true); // Track loading state
     const YOUR_DOMAIN = 'meet.jit.si'; // Use public Jitsi instance or your custom Jitsi server
   
   return (
-    <div>
-      
+    <section className='min-h-screen w-full mt-20'>
+      {
+        isLoading && <Loader/>
+      }
       <JitsiMeeting
         domain={YOUR_DOMAIN}
         roomName="MyAwesomeRoom" // Make sure it's a unique room name
@@ -29,13 +33,13 @@ const Jitsi = () => {
           setIsLoading(false); // Hide loading spinner when API is ready
         }}
         getIFrameRef={(iframeRef) => {
-          iframeRef.style.height = '500px'; // Customize iframe height
+          iframeRef.style.height = '100vh'; // Customize iframe height
           iframeRef.style.width = '100%'; // Full width iframe
         }}
       />
 
-    </div>
+    </section>
   )
 }
 
-export default Jitsi
+export default Meeting

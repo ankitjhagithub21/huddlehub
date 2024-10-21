@@ -1,4 +1,4 @@
-import React from 'react'
+import {Link} from 'react-router-dom'
 
 const Hero = () => {
   return (
@@ -12,9 +12,9 @@ const Hero = () => {
         Join your team from anywhere, at any time, with high-quality streaming.
       </p>
       <div className="space-x-4">
-        <button className="bg-orange-500 px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition">
-          Get Started
-        </button>
+        <Link to="/meeting" className="bg-orange-500 px-6 py-3 rounded-full font-semibold hover:bg-orange-600 transition">
+          Start meeting
+        </Link>
         <button className="border border-orange-500 px-6 py-3 rounded-full hover:bg-orange-500 hover:text-white transition">
           Learn More
         </button>
